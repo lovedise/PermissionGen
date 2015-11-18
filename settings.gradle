@@ -1,1 +1,1 @@
-include ':app', ':permissiongen'
+include ':permissiongen-sample', ':permissiongen'
