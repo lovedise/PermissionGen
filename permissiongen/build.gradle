@@ -1,4 +1,8 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: "com.jfrog.bintray"
+
+version = "0.0.1"
 
 android {
   compileSdkVersion 23
@@ -8,8 +12,9 @@ android {
     minSdkVersion 14
     targetSdkVersion 23
     versionCode 1
-    versionName "1.0"
+    versionName "0.1"
   }
+
   buildTypes {
     release {
       minifyEnabled false
@@ -26,4 +31,96 @@ dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   testCompile 'junit:junit:4.12'
   compile 'com.android.support:appcompat-v7:23.1.1'
+}
+
+def siteUrl = 'https://github.com/lovedise/PermissionGen'      // Homepage URL of the library
+def gitUrl = 'https://github.com/lovedise/PermissionGen.git'   // Git repository URL
+
+group = "com.lovedise"
+
+
+install {
+  repositories.mavenInstaller {
+    // This generates POM.xml with proper parameters
+    pom {
+      project {
+        packaging 'aar'
+
+        // Add your description here
+        name 'PermissionGen'
+        description = 'The project PermissionGen easy to use permission of Android M'
+        url siteUrl
+
+        // Set your license
+        licenses {
+          license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+        developers {
+          developer {
+            id 'lovedise'
+            name 'SeungHwan Kim'
+            email 'lovedise@gmail.com'
+          }
+        }
+        scm {
+          connection gitUrl
+          developerConnection gitUrl
+          url siteUrl
+
+        }
+      }
+    }
+  }
+}
+
+task sourcesJar(type: Jar) {
+  from android.sourceSets.main.java.srcDirs
+  classifier = 'sources'
+}
+
+afterEvaluate {
+  javadoc.classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
+}
+
+task javadoc(type: Javadoc) {
+  source = android.sourceSets.main.java.srcDirs
+  classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+
+}
+artifacts {
+  archives javadocJar
+  archives sourcesJar
+}
+
+
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+// https://github.com/bintray/gradle-bintray-plugin
+bintray {
+  user = properties.getProperty("bintray.user")
+  key = properties.getProperty("bintray.apikey")
+  publish = true
+  configurations = ['archives']
+  pkg {
+    repo = "maven"
+    // it is the name that appears in bintray when logged
+    name = "lovedise"
+    websiteUrl = siteUrl
+    vcsUrl = gitUrl
+    licenses = ["Apache-2.0"]
+    publish = true
+  }
+
+
 }
