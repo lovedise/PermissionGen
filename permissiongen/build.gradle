@@ -21,7 +21,7 @@ android {
 
   }
 }
-
+//1066b170a3e0eba4853ba07e7f0836560e740d7f
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   testCompile 'junit:junit:4.12'

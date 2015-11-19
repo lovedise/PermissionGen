@@ -4,67 +4,104 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import java.lang.annotation.Annotation;
+import android.support.v4.app.Fragment;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import kr.co.namee.permissiongen.internal.Dlog;
 import kr.co.namee.permissiongen.internal.Utils;
 
-import static kr.co.namee.permissiongen.internal.ValidateUtil.verifyGrants;
-import static kr.co.namee.permissiongen.internal.ValidateUtil.verifyPermissions;
+import static kr.co.namee.permissiongen.internal.Utils.getActivity;
 
 /**
  * Created by namee on 2015. 11. 17..
  */
 public class PermissionGen {
-  @TargetApi(value = Build.VERSION_CODES.M)
-  public static Annotation inject(Activity activity) {
-    Class clazz = activity.getClass();
+  private String[] mPermissions;
+  private int mRequestCode;
+  private Object object;
 
-    if (clazz.isAnnotationPresent(AllowPermissions.class)) {
-      AllowPermissions anoAnnotation = (AllowPermissions)clazz.getAnnotation(AllowPermissions.class);
-      String[] values = anoAnnotation.value();
-      List<String> denyPermissions = new ArrayList<>();
-      for(String value : values){
-        if(activity.checkSelfPermission(value) != PackageManager.PERMISSION_GRANTED){
-          denyPermissions.add(value);
-        }
-      }
+  private PermissionGen(Object object) {
+    this.object = object;
+  }
 
-      if(denyPermissions.size() == 0) return null;
-      activity.requestPermissions(denyPermissions.toArray(new String[denyPermissions.size()]), 100);
+  public static PermissionGen with(Activity activity){
+    return new PermissionGen(activity);
+  }
 
-      return anoAnnotation;
-    }
-    return null;
+  public static PermissionGen with(Fragment fragment){
+    return new PermissionGen(fragment);
+  }
+  public PermissionGen permissions(String... permissions){
+    this.mPermissions = permissions;
+    return this;
+  }
+
+  public PermissionGen addRequestCode(int requestCode){
+    this.mRequestCode = requestCode;
+    return this;
   }
 
   @TargetApi(value = Build.VERSION_CODES.M)
-  public static void requestPermission(Activity activity, int requestCode, String[] permissions){
-    Dlog.debug("alksdjflaksdjlfj");
+  public void request(){
+    requestPermissions(object, mRequestCode, mPermissions);
+  }
+
+  public static void needPermission(Activity activity, int requestCode, String[] permissions){
+    requestPermissions(activity, requestCode, permissions);
+  }
+
+  public static void needPermission(Fragment fragment, int requestCode, String[] permissions){
+    requestPermissions(fragment, requestCode, permissions);
+  }
+
+  public static void needPermission(Activity activity, int requestCode, String permission){
+    needPermission(activity, requestCode, new String[] { permission });
+  }
+
+  public static void needPermission(Fragment fragment, int requestCode, String permission){
+    needPermission(fragment, requestCode, new String[] { permission });
+  }
+
+  @TargetApi(value = Build.VERSION_CODES.M)
+  private static void requestPermissions(Object object, int requestCode, String[] permissions){
     if(!Utils.isOverMarshmallow()) {
-      doExecuteSuccess(activity, requestCode);
+      doExecuteSuccess(object, requestCode);
       return;
     }
-    List<String> deniedPermissions = Utils.findDeniedPermissions(activity, permissions);
-
-    Dlog.debug("sample:" + deniedPermissions);
+    List<String> deniedPermissions = Utils.findDeniedPermissions(getActivity(object), permissions);
 
     if(deniedPermissions.size() > 0){
-      activity.requestPermissions(deniedPermissions.toArray(new String[deniedPermissions.size()]), requestCode);
+      if(object instanceof Activity){
+        ((Activity)object).requestPermissions(deniedPermissions.toArray(new String[deniedPermissions.size()]), requestCode);
+      } else if(object instanceof Fragment){
+        ((Fragment)object).requestPermissions(deniedPermissions.toArray(new String[deniedPermissions.size()]), requestCode);
+      }
+
     } else {
-      doExecuteSuccess(activity, requestCode);
+      doExecuteSuccess(object, requestCode);
     }
   }
 
-  private static void doExecuteSuccess(Activity activity, int requestCode) {
-    Method executeMethod = Utils.findMethodPermissionSuccessWithRequestCode(activity.getClass(),
-          PermissionSuccess.class, requestCode);
 
+  private static void doExecuteSuccess(Object activity, int requestCode) {
+    Method executeMethod = Utils.findMethodWithRequestCode(activity.getClass(),
+        PermissionSuccess.class, requestCode);
+
+    executeMethod(activity, executeMethod);
+  }
+
+  private static void doExecuteFail(Object activity, int requestCode) {
+    Method executeMethod = Utils.findMethodWithRequestCode(activity.getClass(),
+        PermissionFail.class, requestCode);
+
+    executeMethod(activity, executeMethod);
+  }
+
+  private static void executeMethod(Object activity, Method executeMethod) {
     if(executeMethod != null){
       try {
+        if(!executeMethod.isAccessible()) executeMethod.setAccessible(true);
         executeMethod.invoke(activity, null);
       } catch (IllegalAccessException e) {
         e.printStackTrace();
@@ -74,7 +111,17 @@ public class PermissionGen {
     }
   }
 
-  public static void requestResult(Activity activity, int requestCode, String[] permissions,
+  public static void onRequestPermissionsResult(Activity activity, int requestCode, String[] permissions,
+      int[] grantResults) {
+    requestResult(activity, requestCode, permissions, grantResults);
+  }
+
+  public static void onRequestPermissionsResult(Fragment fragment, int requestCode, String[] permissions,
+      int[] grantResults) {
+    requestResult(fragment, requestCode, permissions, grantResults);
+  }
+
+  private static void requestResult(Object obj, int requestCode, String[] permissions,
       int[] grantResults){
     List<String> deniedPermissions = new ArrayList<>();
     for(int i=0; i<grantResults.length; i++){
@@ -83,51 +130,10 @@ public class PermissionGen {
       }
     }
 
-    Method executeMethod;
     if(deniedPermissions.size() > 0){
-      executeMethod = Utils.findMethodPermissionFailWithRequestCode(activity.getClass(),
-          PermissionFail.class, requestCode);
+      doExecuteFail(obj, requestCode);
     } else {
-      executeMethod = Utils.findMethodPermissionSuccessWithRequestCode(activity.getClass(),
-          PermissionSuccess.class, requestCode);
-    }
-
-    if(executeMethod != null){
-      try {
-        executeMethod.invoke(activity, null);
-      } catch (IllegalAccessException e) {
-        e.printStackTrace();
-      } catch (InvocationTargetException e) {
-        e.printStackTrace();
-      }
+      doExecuteSuccess(obj, requestCode);
     }
   }
-
-
-  public static void onRequestPermissionsResult(Activity activity, int requestCode, String[] permissions,
-      int[] grantResults){
-
-    Class clazz = activity.getClass();
-    Method[] methods = clazz.getDeclaredMethods();
-
-    if(verifyGrants(grantResults)){
-      for(Method method : methods){
-        if(method.isAnnotationPresent(PermissionSuccess.class)) {
-          if(verifyPermissions(permissions, method)) {
-            try {
-              method.invoke(activity, null);
-              return;
-            } catch (IllegalAccessException e) {
-              e.printStackTrace();
-            } catch (InvocationTargetException e) {
-              e.printStackTrace();
-            }
-          }
-        }
-      }
-    }
-  }
-
-
-
 }
