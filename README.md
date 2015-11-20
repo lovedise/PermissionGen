@@ -47,7 +47,7 @@ PermissionGen.needPermission(ContactFragment.this, 100,
 );
 ```
 
-In onRequestPermissionsResult it is overridden in the activity or fragments, run this code.
+Override the onRequestPermissionsResult in activity or fragment and run below code.
 
 ```java
 @Override public void onRequestPermissionsResult(int requestCode, String[] permissions,
