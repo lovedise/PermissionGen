@@ -10,8 +10,7 @@ public class ContactActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_contact);
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.test, ContactFragment.newInstance())
-        .addToBackStack("contact")
+        .replace(R.id.container, ContactFragment.newInstance())
         .commitAllowingStateLoss();
   }
 }

@@ -1,10 +1,6 @@
 package kr.co.namee.permissiongen.internal;
 
 import android.content.pm.PackageManager;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import kr.co.namee.permissiongen.PermissionSuccess;
 
 /**
  * Created by namee on 2015. 11. 17..
@@ -19,24 +15,24 @@ public class ValidateUtil {
     return true;
   }
 
-  public static boolean verifyPermissions(String[] perissions, Method method) {
-    Map<String, String> map = new HashMap<>();
-    for(String p : perissions){
-      map.put(p, p);
-    }
-
-    PermissionSuccess hasPermissions = method.getAnnotation(PermissionSuccess.class);
-
-    String[] pems = hasPermissions.values();
-    if(perissions.length == pems.length){
-      boolean match = true;
-      for(String pem : pems){
-        if(!map.get(pem).equals(pem)){
-          match = false;
-        }
-      }
-      if(match) return true;
-    }
-    return false;
-  }
+  //public static boolean verifyPermissions(String[] perissions, Method method) {
+  //  Map<String, String> map = new HashMap<>();
+  //  for(String p : perissions){
+  //    map.put(p, p);
+  //  }
+  //
+  //  PermissionSuccess hasPermissions = method.getAnnotation(PermissionSuccess.class);
+  //
+  //  String[] pems = hasPermissions.values();
+  //  if(perissions.length == pems.length){
+  //    boolean match = true;
+  //    for(String pem : pems){
+  //      if(!map.get(pem).equals(pem)){
+  //        match = false;
+  //      }
+  //    }
+  //    if(match) return true;
+  //  }
+  //  return false;
+  //}
 }

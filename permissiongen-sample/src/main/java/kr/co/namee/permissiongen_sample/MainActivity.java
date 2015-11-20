@@ -13,7 +13,6 @@ import butterknife.OnClick;
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
-import kr.co.namee.permissiongen.internal.Dlog;
 import kr.co.namee.permissiongen_sample.contacts.ContactActivity;
 
 public class MainActivity extends AppCompatActivity {
