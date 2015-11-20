@@ -76,6 +76,8 @@ public class PermissionGen {
         ((Activity)object).requestPermissions(deniedPermissions.toArray(new String[deniedPermissions.size()]), requestCode);
       } else if(object instanceof Fragment){
         ((Fragment)object).requestPermissions(deniedPermissions.toArray(new String[deniedPermissions.size()]), requestCode);
+      } else {
+        throw new IllegalArgumentException(object.getClass().getName() + " is not supported");
       }
 
     } else {

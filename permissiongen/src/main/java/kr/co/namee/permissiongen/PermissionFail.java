@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Created by namee on 2015. 11. 18..
+ * Register a method invoked when permission requests are denied.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

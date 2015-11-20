@@ -1,4 +1,4 @@
-# PermissionGen
+# PermissionGen ([한글](https://github.com/lovedise/PermissionGen/blob/master/README-kr.md))
 
 [ ![Download](https://api.bintray.com/packages/lovedise/maven/PermissionGen/images/download.svg) ](https://bintray.com/lovedise/maven/PermissionGen/_latestVersion)
 
@@ -12,14 +12,14 @@ Grab via Maven:
 <dependency>
         <groupId>com.lovedise</groupId>
         <artifactId>permissiongen</artifactId>
-        <version>0.0.5</version>
+        <version>0.0.6</version>
 </dependency>
 ```
 
 or Gradle:
 
 ```Gradle
-compile 'com.lovedise:permissiongen:0.0.5'
+compile 'com.lovedise:permissiongen:0.0.6'
 ```
 
 ##Usage
@@ -47,7 +47,7 @@ PermissionGen.needPermission(ContactFragment.this, 100,
 );
 ```
 
-In onRequestPermissionsResult it is overridden in the activity or fragments, run this code.
+Override the onRequestPermissionsResult in activity or fragment and input this code.
 
 ```java
 @Override public void onRequestPermissionsResult(int requestCode, String[] permissions,
