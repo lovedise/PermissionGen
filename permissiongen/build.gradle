@@ -2,8 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: "com.jfrog.bintray"
 
-version = "0.0.1"
-
 android {
   compileSdkVersion 23
   buildToolsVersion "23.0.2"
@@ -11,8 +9,8 @@ android {
   defaultConfig {
     minSdkVersion 14
     targetSdkVersion 23
-    versionCode 1
-    versionName "0.1"
+    versionCode 4
+    versionName "0.0.5"
   }
 
   buildTypes {
@@ -23,9 +21,10 @@ android {
     debug {
       debuggable true
     }
-
   }
 }
+
+version "0.0.5"
 //1066b170a3e0eba4853ba07e7f0836560e740d7f
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -115,11 +114,22 @@ bintray {
   pkg {
     repo = "maven"
     // it is the name that appears in bintray when logged
-    name = "lovedise"
+    name = "PermissionGen"
     websiteUrl = siteUrl
     vcsUrl = gitUrl
     licenses = ["Apache-2.0"]
     publish = true
+    publicDownloadNumbers = true
+
+//    version {
+//      name = ""
+//      desc = ""
+//      vcsTag = ""
+//      gpg {
+//        sign = true                                                 //Determines whether to GPG sign the files. The default is false
+//        passphrase = properties.getProperty("bintray.gpgPassword")  //Optional. The passphrase for GPG signing'
+//      }
+//    }
   }
 
 
