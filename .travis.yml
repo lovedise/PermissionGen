@@ -1,8 +1,30 @@
+env:
+  - TERM=dumb
 before_install:
- - chmod +x gradlew
-
-language: android
-android:
-  components:
-    - build-tools-23.0.2
-    - android-23
+  # Install base Android SDK
+  - sudo apt-get update -qq
+  - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
+  - wget http://dl.google.com/android/android-sdk_r24.3.4-linux.tgz
+  - tar xzf android-sdk_r24.3.4-linux.tgz
+  - export ANDROID_HOME=$PWD/android-sdk-linux
+  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+ 
+  # Install required components.
+  # For a full list, run `android list sdk -a --extended`
+  # Note that sysimg-19 downloads only ARM, because only the first license query is accepted.
+  - echo yes | android update sdk --filter platform-tools --no-ui --force > /dev/null
+  - echo yes | android update sdk --filter android-23 --no-ui --force > /dev/null
+  - echo yes | android update sdk --filter extra-android-support --no-ui --force > /dev/null
+  - echo yes | android update sdk --filter extra-android-m2repository --no-ui --force > /dev/null
+ 
+  # Google play services
+  - echo yes | android update sdk --filter extra-google-google_play_services --no-ui --force > /dev/null
+ 
+  # Google Repository
+  - echo yes | android update sdk --filter extra-google-m2repository --no-ui --force > /dev/null
+ 
+  # Android SDK Build-tools
+  - echo yes | android update sdk --all --filter build-tools-23.0.2 --no-ui --force > /dev/null
+  
+script:
+  - ./gradlew build
