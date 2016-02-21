@@ -9,8 +9,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import kr.co.namee.permissiongen.PermissionFail;
-import kr.co.namee.permissiongen.PermissionSuccess;
 
 /**
  * Created by namee on 2015. 11. 18..
@@ -43,51 +41,7 @@ final public class Utils {
     return methods;
   }
 
-  public static <A extends Annotation> Method findMethodPermissionFailWithRequestCode(Class clazz,
-      Class<A> permissionFailClass, int requestCode) {
-    for(Method method : clazz.getDeclaredMethods()){
-      if(method.isAnnotationPresent(permissionFailClass)){
-        if(requestCode == method.getAnnotation(PermissionFail.class).requestCode()){
-          return method;
-        }
-      }
-    }
-    return null;
-  }
 
-  public static boolean isEqualRequestCodeFromAnntation(Method m, Class clazz, int requestCode){
-    if(clazz.equals(PermissionFail.class)){
-      return requestCode == m.getAnnotation(PermissionFail.class).requestCode();
-    } else if(clazz.equals(PermissionSuccess.class)){
-      return requestCode == m.getAnnotation(PermissionSuccess.class).requestCode();
-    } else {
-      return false;
-    }
-  }
-
-  public static <A extends Annotation> Method findMethodWithRequestCode(Class clazz,
-      Class<A> annotation, int requestCode) {
-    for(Method method : clazz.getDeclaredMethods()){
-      if(method.isAnnotationPresent(annotation)){
-        if(isEqualRequestCodeFromAnntation(method, annotation, requestCode)){
-          return method;
-        }
-      }
-    }
-    return null;
-  }
-
-  public static <A extends Annotation> Method findMethodPermissionSuccessWithRequestCode(Class clazz,
-      Class<A> permissionFailClass, int requestCode) {
-    for(Method method : clazz.getDeclaredMethods()){
-      if(method.isAnnotationPresent(permissionFailClass)){
-        if(requestCode == method.getAnnotation(PermissionSuccess.class).requestCode()){
-          return method;
-        }
-      }
-    }
-    return null;
-  }
 
   public static Activity getActivity(Object object){
     if(object instanceof Fragment){
