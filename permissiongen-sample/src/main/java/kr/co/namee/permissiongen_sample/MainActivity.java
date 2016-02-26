@@ -10,9 +10,9 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import kr.co.namee.permissiongen.PermissionFail;
+import com.lovedise.permissiongen.annotation.PermissionFail;
+import com.lovedise.permissiongen.annotation.PermissionSuccess;
 import kr.co.namee.permissiongen.PermissionGen;
-import kr.co.namee.permissiongen.PermissionSuccess;
 import kr.co.namee.permissiongen_sample.contacts.ContactActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @PermissionFail(requestCode = 100)
-  private void test2() {
+  public void test2() {
     Dlog.debug("contact fail");
   }
 
   @PermissionSuccess(requestCode = 200)
   public void openCamera(){
-    Dlog.debug("open camera success");
+    Toast.makeText(this, "open camera success", Toast.LENGTH_SHORT).show();
   }
 
   @PermissionFail(requestCode = 200)

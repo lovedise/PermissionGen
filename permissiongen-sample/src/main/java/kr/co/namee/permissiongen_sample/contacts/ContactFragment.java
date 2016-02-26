@@ -8,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import kr.co.namee.permissiongen.PermissionFail;
+import com.lovedise.permissiongen.annotation.PermissionFail;
+import com.lovedise.permissiongen.annotation.PermissionSuccess;
 import kr.co.namee.permissiongen.PermissionGen;
-import kr.co.namee.permissiongen.PermissionSuccess;
 import kr.co.namee.permissiongen_sample.R;
 
 /**

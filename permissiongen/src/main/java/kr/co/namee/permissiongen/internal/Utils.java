@@ -5,12 +5,12 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.Fragment;
+import com.lovedise.permissiongen.annotation.PermissionFail;
+import com.lovedise.permissiongen.annotation.PermissionSuccess;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import kr.co.namee.permissiongen.PermissionFail;
-import kr.co.namee.permissiongen.PermissionSuccess;
 
 /**
  * Created by namee on 2015. 11. 18..

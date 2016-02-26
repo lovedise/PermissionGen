@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.Fragment;
+import com.lovedise.permissiongen.annotation.PermissionFail;
+import com.lovedise.permissiongen.annotation.PermissionSuccess;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;

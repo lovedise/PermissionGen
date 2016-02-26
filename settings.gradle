@@ -1,1 +1,1 @@
-include ':permissiongen-sample', ':permissiongen'
+include ':permissiongen-sample', ':permissiongen', ':permissiongen-compiler', ':permissiongen-annotation'
